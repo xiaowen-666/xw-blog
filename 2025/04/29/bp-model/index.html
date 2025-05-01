@@ -1,0 +1,200 @@
+<!DOCTYPE html><html lang="en" data-theme="light"><head><meta charset="UTF-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width, initial-scale=1.0,viewport-fit=cover"><title>神经网络基础知识点及手搓BP神经网络 | 小w-blog</title><meta name="author" content="小w"><meta name="copyright" content="小w"><meta name="format-detection" content="telephone=no"><meta name="theme-color" content="#ffffff"><meta name="description" content="温故而知新，可以为师矣。发现有时候学的知识久了就容易忘，脑子一瞬间想不起来，加上学的东西越多越杂，一些基础的知识就会在恍惚间忘掉，这篇笔记主要记录一下学习神经网络的一些基础知识点，包括神经网络的前向传播模型推理和反向传播参数更新的原理和一些细节，以及采用numpy“手搓”一个BP神经网络进行一个实战演示。  神经网络 神经网络的一些深刻概念和定义这里不再详细介绍，主要简单讲解一下的它的结构组成，">
+<meta property="og:type" content="article">
+<meta property="og:title" content="神经网络基础知识点及手搓BP神经网络">
+<meta property="og:url" content="http://example.com/2025/04/29/bp-model/index.html">
+<meta property="og:site_name" content="小w-blog">
+<meta property="og:description" content="温故而知新，可以为师矣。发现有时候学的知识久了就容易忘，脑子一瞬间想不起来，加上学的东西越多越杂，一些基础的知识就会在恍惚间忘掉，这篇笔记主要记录一下学习神经网络的一些基础知识点，包括神经网络的前向传播模型推理和反向传播参数更新的原理和一些细节，以及采用numpy“手搓”一个BP神经网络进行一个实战演示。  神经网络 神经网络的一些深刻概念和定义这里不再详细介绍，主要简单讲解一下的它的结构组成，">
+<meta property="og:locale" content="en_US">
+<meta property="og:image" content="http://example.com/image/BP-model/wallhaven-mp5o1k.jpg">
+<meta property="article:published_time" content="2025-04-28T16:00:00.000Z">
+<meta property="article:modified_time" content="2025-04-30T16:56:27.958Z">
+<meta property="article:author" content="小w">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="http://example.com/image/BP-model/wallhaven-mp5o1k.jpg"><script type="application/ld+json">{
+  "@context": "https://schema.org",
+  "@type": "BlogPosting",
+  "headline": "神经网络基础知识点及手搓BP神经网络",
+  "url": "http://example.com/2025/04/29/bp-model/",
+  "image": "http://example.com/image/BP-model/wallhaven-mp5o1k.jpg",
+  "datePublished": "2025-04-28T16:00:00.000Z",
+  "dateModified": "2025-04-30T16:56:27.958Z",
+  "author": [
+    {
+      "@type": "Person",
+      "name": "小w",
+      "url": "http://example.com/"
+    }
+  ]
+}</script><link rel="shortcut icon" href="/img/BLOG.png"><link rel="canonical" href="http://example.com/2025/04/29/bp-model/index.html"><link rel="preconnect" href="//cdn.jsdelivr.net"/><link rel="preconnect" href="//fonts.googleapis.com" crossorigin=""/><link rel="preconnect" href="//busuanzi.ibruce.info"/><link rel="stylesheet" href="/css/index.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free/css/all.min.css"><script>
+    (() => {
+      
+    const saveToLocal = {
+      set: (key, value, ttl) => {
+        if (!ttl) return
+        const expiry = Date.now() + ttl * 86400000
+        localStorage.setItem(key, JSON.stringify({ value, expiry }))
+      },
+      get: key => {
+        const itemStr = localStorage.getItem(key)
+        if (!itemStr) return undefined
+        const { value, expiry } = JSON.parse(itemStr)
+        if (Date.now() > expiry) {
+          localStorage.removeItem(key)
+          return undefined
+        }
+        return value
+      }
+    }
+
+    window.btf = {
+      saveToLocal,
+      getScript: (url, attr = {}) => new Promise((resolve, reject) => {
+        const script = document.createElement('script')
+        script.src = url
+        script.async = true
+        Object.entries(attr).forEach(([key, val]) => script.setAttribute(key, val))
+        script.onload = script.onreadystatechange = () => {
+          if (!script.readyState || /loaded|complete/.test(script.readyState)) resolve()
+        }
+        script.onerror = reject
+        document.head.appendChild(script)
+      }),
+      getCSS: (url, id) => new Promise((resolve, reject) => {
+        const link = document.createElement('link')
+        link.rel = 'stylesheet'
+        link.href = url
+        if (id) link.id = id
+        link.onload = link.onreadystatechange = () => {
+          if (!link.readyState || /loaded|complete/.test(link.readyState)) resolve()
+        }
+        link.onerror = reject
+        document.head.appendChild(link)
+      }),
+      addGlobalFn: (key, fn, name = false, parent = window) => {
+        if (!false && key.startsWith('pjax')) return
+        const globalFn = parent.globalFn || {}
+        globalFn[key] = globalFn[key] || {}
+        globalFn[key][name || Object.keys(globalFn[key]).length] = fn
+        parent.globalFn = globalFn
+      }
+    }
+  
+      
+      const activateDarkMode = () => {
+        document.documentElement.setAttribute('data-theme', 'dark')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#0d0d0d')
+        }
+      }
+      const activateLightMode = () => {
+        document.documentElement.setAttribute('data-theme', 'light')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#ffffff')
+        }
+      }
+
+      btf.activateDarkMode = activateDarkMode
+      btf.activateLightMode = activateLightMode
+
+      const theme = saveToLocal.get('theme')
+    
+          theme === 'dark' ? activateDarkMode() : theme === 'light' ? activateLightMode() : null
+        
+      
+      const asideStatus = saveToLocal.get('aside-status')
+      if (asideStatus !== undefined) {
+        document.documentElement.classList.toggle('hide-aside', asideStatus === 'hide')
+      }
+    
+      
+    const detectApple = () => {
+      if (/iPad|iPhone|iPod|Macintosh/.test(navigator.userAgent)) {
+        document.documentElement.classList.add('apple')
+      }
+    }
+    detectApple()
+  
+    })()
+  </script><link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Titillium+Web&amp;display=swap" media="print" onload="this.media='all'"><script>const GLOBAL_CONFIG = {
+  root: '/',
+  algolia: undefined,
+  localSearch: undefined,
+  translate: undefined,
+  highlight: {"plugin":"highlight.js","highlightCopy":true,"highlightLang":true,"highlightHeightLimit":false,"highlightFullpage":false,"highlightMacStyle":false},
+  copy: {
+    success: 'Copy Successful',
+    error: 'Copy Failed',
+    noSupport: 'Browser Not Supported'
+  },
+  relativeDate: {
+    homepage: false,
+    post: false
+  },
+  runtime: '',
+  dateSuffix: {
+    just: 'Just now',
+    min: 'minutes ago',
+    hour: 'hours ago',
+    day: 'days ago',
+    month: 'months ago'
+  },
+  copyright: undefined,
+  lightbox: 'null',
+  Snackbar: undefined,
+  infinitegrid: {
+    js: 'https://cdn.jsdelivr.net/npm/@egjs/infinitegrid/dist/infinitegrid.min.js',
+    buttonText: 'Load More'
+  },
+  isPhotoFigcaption: false,
+  islazyloadPlugin: false,
+  isAnchor: false,
+  percent: {
+    toc: true,
+    rightside: true,
+  },
+  autoDarkmode: false
+}</script><script id="config-diff">var GLOBAL_CONFIG_SITE = {
+  title: '神经网络基础知识点及手搓BP神经网络',
+  isHighlightShrink: false,
+  isToc: true,
+  pageType: 'post'
+}</script><meta name="generator" content="Hexo 6.3.0"></head><body><div id="sidebar"><div id="menu-mask"></div><div id="sidebar-menus"><div class="avatar-img text-center"><img src="/img/wallhaven-k7q1l1.png" onerror="this.onerror=null;this.src='/img/friend_404.gif'" alt="avatar"/></div><div class="site-data text-center"><a href="/archives/"><div class="headline">Articles</div><div class="length-num">8</div></a><a href="/tags/"><div class="headline">Tags</div><div class="length-num">0</div></a><a href="/categories/"><div class="headline">Categories</div><div class="length-num">1</div></a></div><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> Home</span></a></div><div class="menus_item"><a class="site-page" href="/archives/"><i class="fa-fw fas fa-archive"></i><span> Archives</span></a></div><div class="menus_item"><a class="site-page" href="/categories/"><i class="fa-fw fas fa-folder-open"></i><span> Categories</span></a></div></div></div></div><div class="post" id="body-wrap"><header class="post-bg" id="page-header" style="background-image: url(/image/BP-model/wallhaven-mp5o1k.jpg);"><nav id="nav"><span id="blog-info"><a class="nav-site-title" href="/"><span class="site-name">小w-blog</span></a><a class="nav-page-title" href="/"><span class="site-name">神经网络基础知识点及手搓BP神经网络</span></a></span><div id="menus"><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> Home</span></a></div><div class="menus_item"><a class="site-page" href="/archives/"><i class="fa-fw fas fa-archive"></i><span> Archives</span></a></div><div class="menus_item"><a class="site-page" href="/categories/"><i class="fa-fw fas fa-folder-open"></i><span> Categories</span></a></div></div><div id="toggle-menu"><span class="site-page"><i class="fas fa-bars fa-fw"></i></span></div></div></nav><div id="post-info"><h1 class="post-title">神经网络基础知识点及手搓BP神经网络</h1><div id="post-meta"><div class="meta-firstline"><span class="post-meta-date"><i class="far fa-calendar-alt fa-fw post-meta-icon"></i><span class="post-meta-label">Created</span><time class="post-meta-date-created" datetime="2025-04-28T16:00:00.000Z" title="Created 2025-04-29 00:00:00">2025-04-29</time><span class="post-meta-separator">|</span><i class="fas fa-history fa-fw post-meta-icon"></i><span class="post-meta-label">Updated</span><time class="post-meta-date-updated" datetime="2025-04-30T16:56:27.958Z" title="Updated 2025-05-01 00:56:27">2025-05-01</time></span></div><div class="meta-secondline"><span class="post-meta-separator">|</span><span class="post-meta-pv-cv" id="" data-flag-title=""><i class="far fa-eye fa-fw post-meta-icon"></i><span class="post-meta-label">Post Views:</span><span id="busuanzi_value_page_pv"><i class="fa-solid fa-spinner fa-spin"></i></span></span></div></div></div></header><main class="layout" id="content-inner"><div id="post"><article class="container post-content" id="article-container"><ul>
+<li>温故而知新，可以为师矣。发现有时候学的知识久了就容易忘，脑子一瞬间想不起来，加上学的东西越多越杂，一些基础的知识就会在恍惚间忘掉，这篇笔记主要记录一下学习神经网络的一些基础知识点，包括神经网络的前向传播模型推理和反向传播参数更新的原理和一些细节，以及采用numpy“手搓”一个BP神经网络进行一个实战演示。</li>
+</ul>
+<h1 id="神经网络"><a href="#神经网络" class="headerlink" title="神经网络"></a>神经网络</h1><ul>
+<li>神经网络的一些深刻概念和定义这里不再详细介绍，主要简单讲解一下的它的结构组成，神经网络由输入层、隐藏层和输出层构成，层内有神经元。而此神经元就是构建输入端与输出端复杂映射关系的关键，每个神经元就是一个数学公式 $$y&#x3D;wx+b$$ ，层与层之间通过神经元连接从而构造输入数据（特征）之间的复杂联系。输入层和输出层一般都是单层，且其神经元个数一般也会由任务固定定义了，而隐藏层的层数和每层隐藏层内的神经元个数则是由学者根据具体工况设置，工况欲复杂其隐藏层数及神经元个数一般就会增加，但隐藏层的层数和神经元个数都是在学者反复训练、修改、对比后确定的，这个过程也就是常说的“神经网络模型结构超参数的优化选择”。下图1展示了两种不同的结构的神经网络模型。</li>
+</ul>
+<!-- ![](image/BP-model/model.png) -->
+
+<img src="/image/BP-model/model.png" alt="图1" width="650">
+
+<ul>
+<li>上式是构成神经网络中神经元的核心运算，式中：y是神经元的输出值，x是神经元的输入值，w和b分别是神经元的权重(weight)和偏置(bias)，也就是神经网络的参数，神经网络学习的过程就是调整这两个值。</li>
+</ul>
+<h1 id="前向传播"><a href="#前向传播" class="headerlink" title="前向传播"></a>前向传播</h1><ul>
+<li><p>前向传播是指将输入数据通过神经网络层之间的神经元，逐层计算推理并传递到输出层的过程。就以图1中(a)神经网络进行简单讲解。(a)网络采用单层2神经元的输入层，两层隐藏层单元数分别为5和3，单层1个神经元的输出层搭建。输入层有两个神经元表明输入的数据特征为2，第一隐藏层的神经元为3，第二隐藏层的神经元为2，表明神经网络对输入特征先进行一个升维后再进行一个降维，最后由输出层的1个神经元输出单值结果。</p>
+</li>
+<li><p>隐藏层在神经网络起到一个特征变换的作用，包括特征升维和降维。特征升维是将原始特征维度映射到更高维度空间，以增加特征丰富度，捕捉更复杂的模式。特征降维则是将原始特征维度映射到低维度空间，同时尽可能保留数据中重要信息，以降低计算成本、去除冗余信息。隐藏层也是通过非线性激活函数对层输入数据进行非线性变换，将输入特征引入非线性特征空间的关键。下图2展示了神经网络前向传播的推理过程。</p>
+</li>
+</ul>
+<img src="/image/BP-model/前向传播.png" alt="图2" width="650">
+
+
+<h1 id="损失计算"><a href="#损失计算" class="headerlink" title="损失计算"></a>损失计算</h1><ul>
+<li>损失计算是指衡量模型预测值与真实值之间差异的过程，对于每一个输入样本，模型都会产生一个预测输出（注：这里的“一个”指的是样本数不是特征数）。通过将这个预测输出值与该样本的真实值进行比较，计算出一个数值，这个数值就是该样本的损失值也称为误差。</li>
+<li>损失函数一般可分为两个大类：回归与分类。回归的损失函数一般常用有均方差损失函数(MSE)，平均绝对误差损失函数(MAE)等，分类的损失函数就是交叉熵，二元交叉熵损失函数(Binary Cross-Entropy)和多分类交叉熵损失函数(Categorical Cross-Entropy)。这次搭建一个简单的回归网络就用MSE损失函数。</li>
+</ul>
+<p>$$ MSE&#x3D;\frac{1}{n}\sum_{n}^{i&#x3D;1}\left ( \hat{y_{i}} -y_{i}   \right )^{2}  $$</p>
+<ul>
+<li>式中：ŷi为第i个样本的预测值，yi为第i个样本的真实值，n为样本数。</li>
+</ul>
+<h1 id="反向传播"><a href="#反向传播" class="headerlink" title="反向传播"></a>反向传播</h1><ul>
+<li>反向传播是神经网络训练的关键技术，它用于计算损失函数关于网络中各个参数（权重和偏置）的梯度（偏导数）。梯度计算过程利用了微积分中的链式法则，反向逐层计算每个参数的偏导数，这些梯度随后被优化器用来更新参数（参数的更新也必须遵守反向逐层参数更新），从而减小损失函数，提高模型的性能。下图3展示了神经网络反向传播的过程。</li>
+</ul>
+<img src="/image/BP-model/反向传播.png" alt="图3" width="650">
+
+
+<h1 id="BP神经网络的搭建"><a href="#BP神经网络的搭建" class="headerlink" title="BP神经网络的搭建"></a>BP神经网络的搭建</h1><ul>
+<li>通过前面的简单回归神经网络的已经明白了神经网络的前向传播和反向传播以及神经网络中参数的迭代更新，现在搭建图1(b)的BP神经网络模型，前两个隐藏层采用Sigmoid激活函数，后一层隐藏层采用ReLu激活函数。搭建步骤通过代码注释逐步讲解。</li>
+</ul>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br><span class="line">96</span><br><span class="line">97</span><br><span class="line">98</span><br><span class="line">99</span><br><span class="line">100</span><br><span class="line">101</span><br><span class="line">102</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> numpy <span class="keyword">as</span> np</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="keyword">class</span> <span class="title class_">RegressionNet</span>:</span><br><span class="line">    <span class="string">&quot;&quot;&quot;</span></span><br><span class="line"><span class="string">    The BP-Net was created for 1 input layer, 3 hidden layers and 1 output layer</span></span><br><span class="line"><span class="string">    input_layer: 3 units(features)</span></span><br><span class="line"><span class="string">    1th hidden layer: 30 units</span></span><br><span class="line"><span class="string">    2th hidden layer: 10 units</span></span><br><span class="line"><span class="string">    3th hidden layer: 3 units</span></span><br><span class="line"><span class="string">    output_layer: 1 units</span></span><br><span class="line"><span class="string">    &quot;&quot;&quot;</span></span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">__init__</span>(<span class="params">self</span>):</span><br><span class="line">        <span class="string">&quot;&quot;&quot;</span></span><br><span class="line"><span class="string">        通过numpy.random.randn生成正态分布参数权重和偏置初始值，并设置学习率lr为0.01</span></span><br><span class="line"><span class="string">        &quot;&quot;&quot;</span></span><br><span class="line">        self.lr = <span class="number">0.01</span></span><br><span class="line">        self.w1 = np.random.randn(<span class="number">30</span>, <span class="number">3</span>)</span><br><span class="line">        self.b1 = np.random.randn(<span class="number">30</span>, <span class="number">1</span>)</span><br><span class="line">        self.w2 = np.random.randn(<span class="number">10</span>, <span class="number">30</span>)</span><br><span class="line">        self.b2 = np.random.randn(<span class="number">10</span>, <span class="number">1</span>)</span><br><span class="line">        self.w3 = np.random.randn(<span class="number">3</span>, <span class="number">10</span>)</span><br><span class="line">        self.b3 = np.random.randn(<span class="number">3</span>, <span class="number">1</span>)</span><br><span class="line">        self.w4 = np.random.randn(<span class="number">1</span>, <span class="number">3</span>)</span><br><span class="line">        self.b4 = np.random.randn(<span class="number">1</span>, <span class="number">1</span>)</span><br><span class="line"></span><br><span class="line">    <span class="comment"># ReLu激活函数</span></span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">relu</span>(<span class="params">self, x</span>):</span><br><span class="line">        <span class="keyword">return</span> np.where(x &gt; <span class="number">0</span>, x, <span class="number">0</span>)</span><br><span class="line"></span><br><span class="line">    <span class="comment"># ReLu激活函数的求导</span></span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">relu_derivative</span>(<span class="params">self, x</span>):</span><br><span class="line">        <span class="keyword">return</span> np.where(x &gt; <span class="number">0</span>, <span class="number">1</span>, <span class="number">0</span>)</span><br><span class="line"></span><br><span class="line">    <span class="comment"># Sigmoid激活函数</span></span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">sigmoid</span>(<span class="params">self, x</span>):</span><br><span class="line">        <span class="keyword">return</span> <span class="number">1</span>/(<span class="number">1</span>+np.exp(-x))</span><br><span class="line"></span><br><span class="line">    <span class="comment"># Sigmoid激活函数求导</span></span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">sigmoid_derivative</span>(<span class="params">self, x</span>):</span><br><span class="line">        <span class="keyword">return</span> self.sigmoid(x)*(<span class="number">1</span>-self.sigmoid(x))</span><br><span class="line"></span><br><span class="line">    <span class="comment"># MSE均方差损失函数</span></span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">mse</span>(<span class="params">self, y, y_hat</span>):</span><br><span class="line">        <span class="keyword">return</span> np.mean((y-y_hat)**<span class="number">2</span>)</span><br><span class="line"></span><br><span class="line">    <span class="comment"># 前向传播</span></span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">forward</span>(<span class="params">self, x</span>):</span><br><span class="line">        <span class="keyword">assert</span> x.shape[<span class="number">0</span>] == self.w1.shape[<span class="number">1</span>]</span><br><span class="line">        self.z1 = self.w1@x + self.b1</span><br><span class="line">        self.a1 = self.sigmoid(self.z1)</span><br><span class="line">        self.z2 = self.w2@self.a1 + self.b2</span><br><span class="line">        self.a2 = self.sigmoid(self.z2)</span><br><span class="line">        self.z3 = self.w3@self.a2 + self.b3</span><br><span class="line">        self.a3 = self.relu(self.z3)</span><br><span class="line">        self.y_hat = self.w4@self.a3 + self.b4</span><br><span class="line"></span><br><span class="line">        <span class="keyword">return</span> self.y_hat</span><br><span class="line"></span><br><span class="line">    <span class="comment"># 反向传播</span></span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">backward</span>(<span class="params">self, x, y, y_hat</span>):</span><br><span class="line">        <span class="comment"># 链式法则求导</span></span><br><span class="line">        m = x.shape[<span class="number">1</span>]</span><br><span class="line">        dy_hat = -<span class="number">2</span>*(y-y_hat)/m</span><br><span class="line">        dw4 = dy_hat@self.a3.T</span><br><span class="line">        db4 = np.mean(dy_hat, axis=<span class="number">1</span>, keepdims=<span class="literal">True</span>)  <span class="comment"># 这里的mean的操作是对训练样本进行均值处理，下同</span></span><br><span class="line">        da3 = self.w4.T@dy_hat</span><br><span class="line">        dz3 = da3*self.relu_derivative(self.z3)</span><br><span class="line">        dw3 = dz3@self.a2.T</span><br><span class="line">        db3 = np.mean(dz3, axis=<span class="number">1</span>, keepdims=<span class="literal">True</span>)</span><br><span class="line">        da2 = self.w3.T@dz3</span><br><span class="line">        dz2 = da2*self.sigmoid_derivative(self.z2)</span><br><span class="line">        dw2 = dz2@self.a1.T</span><br><span class="line">        db2 = np.mean(dz2, axis=<span class="number">1</span>, keepdims=<span class="literal">True</span>)</span><br><span class="line">        da1 = self.w2.T@dz2</span><br><span class="line">        dz1 = da1*self.sigmoid_derivative(self.z1)</span><br><span class="line">        dw1 = dz1@x.T</span><br><span class="line">        db1 = np.mean(dz1, axis=<span class="number">1</span>, keepdims=<span class="literal">True</span>)</span><br><span class="line"></span><br><span class="line">        <span class="comment"># 参数更新</span></span><br><span class="line">        self.w4 = self.w4 - self.lr*dw4</span><br><span class="line">        self.b4 = self.b4 - self.lr*db4</span><br><span class="line">        self.w3 = self.w3 - self.lr*dw3</span><br><span class="line">        self.b3 = self.b3 - self.lr*db3</span><br><span class="line">        self.w2 = self.w2 - self.lr*dw2</span><br><span class="line">        self.b2 = self.b2 - self.lr*db2</span><br><span class="line">        self.w1 = self.w1 - self.lr*dw1</span><br><span class="line">        self.b1 = self.b1 - self.lr*db1</span><br><span class="line"></span><br><span class="line">    <span class="comment"># 网络训练</span></span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">train</span>(<span class="params">self, x, y</span>):</span><br><span class="line">        y_hat = self.forward(x)</span><br><span class="line">        loss = self.mse(y, y_hat)</span><br><span class="line">        <span class="comment"># 进行反向传播</span></span><br><span class="line">        self.backward(x, y, y_hat)</span><br><span class="line">        <span class="keyword">return</span> loss</span><br><span class="line"></span><br><span class="line">    <span class="comment"># 网络测试</span></span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">test</span>(<span class="params">self, x</span>):</span><br><span class="line">        y_hat = self.forward(x)</span><br><span class="line">        <span class="keyword">return</span> y_hat</span><br><span class="line"></span><br></pre></td></tr></table></figure></article><div class="tag_share"><div class="post-share"><div class="social-share" data-image="/image/BP-model/wallhaven-mp5o1k.jpg" data-sites="facebook,twitter,wechat,weibo,qq"></div><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/butterfly-extsrc/sharejs/dist/css/share.min.css" media="print" onload="this.media='all'"><script src="https://cdn.jsdelivr.net/npm/butterfly-extsrc/sharejs/dist/js/social-share.min.js" defer></script></div></div></div><div class="aside-content" id="aside-content"><div class="card-widget card-info text-center"><div class="avatar-img"><img src="/img/wallhaven-k7q1l1.png" onerror="this.onerror=null;this.src='/img/friend_404.gif'" alt="avatar"/></div><div class="author-info-name">小w</div><div class="author-info-description"></div><div class="site-data"><a href="/archives/"><div class="headline">Articles</div><div class="length-num">8</div></a><a href="/tags/"><div class="headline">Tags</div><div class="length-num">0</div></a><a href="/categories/"><div class="headline">Categories</div><div class="length-num">1</div></a></div><a id="card-info-btn" target="_blank" rel="noopener" href="https://github.com"><i class="fab fa-github"></i><span>Follow Me</span></a></div><div class="card-widget card-announcement"><div class="item-headline"><i class="fas fa-bullhorn fa-shake"></i><span>Announcement</span></div><div class="announcement_content">This is my Blog</div></div><div class="sticky_layout"><div class="card-widget" id="card-toc"><div class="item-headline"><i class="fas fa-stream"></i><span>Contents</span><span class="toc-percentage"></span></div><div class="toc-content"><ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#%E7%A5%9E%E7%BB%8F%E7%BD%91%E7%BB%9C"><span class="toc-number">1.</span> <span class="toc-text">神经网络</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E5%89%8D%E5%90%91%E4%BC%A0%E6%92%AD"><span class="toc-number">2.</span> <span class="toc-text">前向传播</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E6%8D%9F%E5%A4%B1%E8%AE%A1%E7%AE%97"><span class="toc-number">3.</span> <span class="toc-text">损失计算</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E5%8F%8D%E5%90%91%E4%BC%A0%E6%92%AD"><span class="toc-number">4.</span> <span class="toc-text">反向传播</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#BP%E7%A5%9E%E7%BB%8F%E7%BD%91%E7%BB%9C%E7%9A%84%E6%90%AD%E5%BB%BA"><span class="toc-number">5.</span> <span class="toc-text">BP神经网络的搭建</span></a></li></ol></div></div><div class="card-widget card-recent-post"><div class="item-headline"><i class="fas fa-history"></i><span>Recent Posts</span></div><div class="aside-list"><div class="aside-list-item"><a class="thumbnail" href="/2025/04/29/bp-model/" title="神经网络基础知识点及手搓BP神经网络"><img src="/image/BP-model/wallhaven-mp5o1k.jpg" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="神经网络基础知识点及手搓BP神经网络"/></a><div class="content"><a class="title" href="/2025/04/29/bp-model/" title="神经网络基础知识点及手搓BP神经网络">神经网络基础知识点及手搓BP神经网络</a><time datetime="2025-04-28T16:00:00.000Z" title="Created 2025-04-29 00:00:00">2025-04-29</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/2025/01/01/M-P%20model/" title="M-P模型"><img src="/image/M-P_Model/wallhaven-dgp9eg.jpg" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="M-P模型"/></a><div class="content"><a class="title" href="/2025/01/01/M-P%20model/" title="M-P模型">M-P模型</a><time datetime="2024-12-31T16:00:00.000Z" title="Created 2025-01-01 00:00:00">2025-01-01</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/2024/12/30/category%20copy/" title="数据预处理"><img src="/image/Data%20preprocessing/wallhaven-yxdrex.png" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="数据预处理"/></a><div class="content"><a class="title" href="/2024/12/30/category%20copy/" title="数据预处理">数据预处理</a><time datetime="2024-12-29T16:00:00.000Z" title="Created 2024-12-30 00:00:00">2024-12-30</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/2024/12/30/regularization/" title="正则化"><img src="/image/Regularization/luizclas.jpg" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="正则化"/></a><div class="content"><a class="title" href="/2024/12/30/regularization/" title="正则化">正则化</a><time datetime="2024-12-29T16:00:00.000Z" title="Created 2024-12-30 00:00:00">2024-12-30</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/2023/09/19/ab-vs-ivf/" title="Abaqus2020+VS2015+Fortran2016关联配置"><img src="/image/ab_vs_f/2yojr9.jpg" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="Abaqus2020+VS2015+Fortran2016关联配置"/></a><div class="content"><a class="title" href="/2023/09/19/ab-vs-ivf/" title="Abaqus2020+VS2015+Fortran2016关联配置">Abaqus2020+VS2015+Fortran2016关联配置</a><time datetime="2023-09-18T16:00:00.000Z" title="Created 2023-09-19 00:00:00">2023-09-19</time></div></div></div></div></div></div></main><footer id="footer"><div class="footer-other"><div class="footer-copyright"></div></div></footer></div><div id="rightside"><div id="rightside-config-hide"><button id="readmode" type="button" title="Reading Mode"><i class="fas fa-book-open"></i></button><button id="darkmode" type="button" title="Toggle Between Light and Dark Mode"><i class="fas fa-adjust"></i></button><button id="hide-aside-btn" type="button" title="Toggle Between Single-column and Double-column"><i class="fas fa-arrows-alt-h"></i></button></div><div id="rightside-config-show"><button id="rightside-config" type="button" title="Settings"><i class="fas fa-cog fa-spin"></i></button><button class="close" id="mobile-toc-button" type="button" title="Table of Contents"><i class="fas fa-list-ul"></i></button><button id="go-up" type="button" title="Back to Top"><span class="scroll-percent"></span><i class="fas fa-arrow-up"></i></button></div></div><div><script src="/js/utils.js"></script><script src="/js/main.js"></script><div class="js-pjax"></div><script defer="defer" id="ribbon" src="https://cdn.jsdelivr.net/npm/butterfly-extsrc/dist/canvas-ribbon.min.js" size="150" alpha="0.6" zIndex="-1" mobile="false" data-click="false"></script><script async data-pjax src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script></div></body></html>

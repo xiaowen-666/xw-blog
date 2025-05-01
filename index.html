@@ -1,0 +1,188 @@
+<!DOCTYPE html><html lang="en" data-theme="light"><head><meta charset="UTF-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width, initial-scale=1.0,viewport-fit=cover"><title>小w-blog</title><meta name="author" content="小w"><meta name="copyright" content="小w"><meta name="format-detection" content="telephone=no"><meta name="theme-color" content="#ffffff"><meta property="og:type" content="website">
+<meta property="og:title" content="小w-blog">
+<meta property="og:url" content="http://example.com/index.html">
+<meta property="og:site_name" content="小w-blog">
+<meta property="og:locale" content="en_US">
+<meta property="og:image" content="http://example.com/img/wallhaven-k7q1l1.png">
+<meta property="article:author" content="小w">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="http://example.com/img/wallhaven-k7q1l1.png"><link rel="shortcut icon" href="/img/BLOG.png"><link rel="canonical" href="http://example.com/index.html"><link rel="preconnect" href="//cdn.jsdelivr.net"/><link rel="preconnect" href="//fonts.googleapis.com" crossorigin=""/><link rel="preconnect" href="//busuanzi.ibruce.info"/><link rel="stylesheet" href="/css/index.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free/css/all.min.css"><script>
+    (() => {
+      
+    const saveToLocal = {
+      set: (key, value, ttl) => {
+        if (!ttl) return
+        const expiry = Date.now() + ttl * 86400000
+        localStorage.setItem(key, JSON.stringify({ value, expiry }))
+      },
+      get: key => {
+        const itemStr = localStorage.getItem(key)
+        if (!itemStr) return undefined
+        const { value, expiry } = JSON.parse(itemStr)
+        if (Date.now() > expiry) {
+          localStorage.removeItem(key)
+          return undefined
+        }
+        return value
+      }
+    }
+
+    window.btf = {
+      saveToLocal,
+      getScript: (url, attr = {}) => new Promise((resolve, reject) => {
+        const script = document.createElement('script')
+        script.src = url
+        script.async = true
+        Object.entries(attr).forEach(([key, val]) => script.setAttribute(key, val))
+        script.onload = script.onreadystatechange = () => {
+          if (!script.readyState || /loaded|complete/.test(script.readyState)) resolve()
+        }
+        script.onerror = reject
+        document.head.appendChild(script)
+      }),
+      getCSS: (url, id) => new Promise((resolve, reject) => {
+        const link = document.createElement('link')
+        link.rel = 'stylesheet'
+        link.href = url
+        if (id) link.id = id
+        link.onload = link.onreadystatechange = () => {
+          if (!link.readyState || /loaded|complete/.test(link.readyState)) resolve()
+        }
+        link.onerror = reject
+        document.head.appendChild(link)
+      }),
+      addGlobalFn: (key, fn, name = false, parent = window) => {
+        if (!false && key.startsWith('pjax')) return
+        const globalFn = parent.globalFn || {}
+        globalFn[key] = globalFn[key] || {}
+        globalFn[key][name || Object.keys(globalFn[key]).length] = fn
+        parent.globalFn = globalFn
+      }
+    }
+  
+      
+      const activateDarkMode = () => {
+        document.documentElement.setAttribute('data-theme', 'dark')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#0d0d0d')
+        }
+      }
+      const activateLightMode = () => {
+        document.documentElement.setAttribute('data-theme', 'light')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#ffffff')
+        }
+      }
+
+      btf.activateDarkMode = activateDarkMode
+      btf.activateLightMode = activateLightMode
+
+      const theme = saveToLocal.get('theme')
+    
+          theme === 'dark' ? activateDarkMode() : theme === 'light' ? activateLightMode() : null
+        
+      
+      const asideStatus = saveToLocal.get('aside-status')
+      if (asideStatus !== undefined) {
+        document.documentElement.classList.toggle('hide-aside', asideStatus === 'hide')
+      }
+    
+      
+    const detectApple = () => {
+      if (/iPad|iPhone|iPod|Macintosh/.test(navigator.userAgent)) {
+        document.documentElement.classList.add('apple')
+      }
+    }
+    detectApple()
+  
+    })()
+  </script><link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Titillium+Web&amp;display=swap" media="print" onload="this.media='all'"><script>const GLOBAL_CONFIG = {
+  root: '/',
+  algolia: undefined,
+  localSearch: undefined,
+  translate: undefined,
+  highlight: {"plugin":"highlight.js","highlightCopy":true,"highlightLang":true,"highlightHeightLimit":false,"highlightFullpage":false,"highlightMacStyle":false},
+  copy: {
+    success: 'Copy Successful',
+    error: 'Copy Failed',
+    noSupport: 'Browser Not Supported'
+  },
+  relativeDate: {
+    homepage: false,
+    post: false
+  },
+  runtime: '',
+  dateSuffix: {
+    just: 'Just now',
+    min: 'minutes ago',
+    hour: 'hours ago',
+    day: 'days ago',
+    month: 'months ago'
+  },
+  copyright: undefined,
+  lightbox: 'null',
+  Snackbar: undefined,
+  infinitegrid: {
+    js: 'https://cdn.jsdelivr.net/npm/@egjs/infinitegrid/dist/infinitegrid.min.js',
+    buttonText: 'Load More'
+  },
+  isPhotoFigcaption: false,
+  islazyloadPlugin: false,
+  isAnchor: false,
+  percent: {
+    toc: true,
+    rightside: true,
+  },
+  autoDarkmode: false
+}</script><script id="config-diff">var GLOBAL_CONFIG_SITE = {
+  title: '小w-blog',
+  isHighlightShrink: false,
+  isToc: false,
+  pageType: 'home'
+}</script><meta name="generator" content="Hexo 6.3.0"></head><body><div id="sidebar"><div id="menu-mask"></div><div id="sidebar-menus"><div class="avatar-img text-center"><img src="/img/wallhaven-k7q1l1.png" onerror="this.onerror=null;this.src='/img/friend_404.gif'" alt="avatar"/></div><div class="site-data text-center"><a href="/archives/"><div class="headline">Articles</div><div class="length-num">8</div></a><a href="/tags/"><div class="headline">Tags</div><div class="length-num">0</div></a><a href="/categories/"><div class="headline">Categories</div><div class="length-num">1</div></a></div><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> Home</span></a></div><div class="menus_item"><a class="site-page" href="/archives/"><i class="fa-fw fas fa-archive"></i><span> Archives</span></a></div><div class="menus_item"><a class="site-page" href="/categories/"><i class="fa-fw fas fa-folder-open"></i><span> Categories</span></a></div></div></div></div><div class="page" id="body-wrap"><header class="full_page" id="page-header" style="background-image: url(/img/wallhaven.png);"><nav id="nav"><span id="blog-info"><a class="nav-site-title" href="/"><span class="site-name">小w-blog</span></a></span><div id="menus"><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> Home</span></a></div><div class="menus_item"><a class="site-page" href="/archives/"><i class="fa-fw fas fa-archive"></i><span> Archives</span></a></div><div class="menus_item"><a class="site-page" href="/categories/"><i class="fa-fw fas fa-folder-open"></i><span> Categories</span></a></div></div><div id="toggle-menu"><span class="site-page"><i class="fas fa-bars fa-fw"></i></span></div></div></nav><div id="site-info"><h1 id="site-title">小w-blog</h1><div id="site-subtitle"><span id="subtitle"></span></div></div><div id="scroll-down"><i class="fas fa-angle-down scroll-down-effects"></i></div></header><main class="layout" id="content-inner"><div class="recent-posts nc" id="recent-posts"><div class="recent-post-items"><div class="recent-post-item"><div class="post_cover left"><a href="/2025/04/29/bp-model/" title="神经网络基础知识点及手搓BP神经网络"><img class="post-bg" src="/image/BP-model/wallhaven-mp5o1k.jpg" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="神经网络基础知识点及手搓BP神经网络"></a></div><div class="recent-post-info"><a class="article-title" href="/2025/04/29/bp-model/" title="神经网络基础知识点及手搓BP神经网络">神经网络基础知识点及手搓BP神经网络</a><div class="article-meta-wrap"><span class="post-meta-date"><i class="far fa-calendar-alt"></i><span class="article-meta-label">Created</span><time datetime="2025-04-28T16:00:00.000Z" title="Created 2025-04-29 00:00:00">2025-04-29</time></span></div><div class="content"> 温故而知新，可以为师矣。发现有时候学的知识久了就容易忘，脑子一瞬间想不起来，加上学的东西越多越杂，一些基础的知识就会在恍惚间忘掉，这篇笔记主要记录一下学习神经网络的一些基础知识点，包括神经网络的前向传播模型推理和反向传播参数更新的原理和一些细节，以及采用numpy“手搓”一个BP神经网络进行一个实战演示。  神经网络 神经网络的一些深刻概念和定义这里不再详细介绍，主要简单讲解一下的它的结构组成，神经网络由输入层、隐藏层和输出层构成，层内有神经元。而此神经元就是构建输入端与输出端复杂映射关系的关键，每个神经元就是一个数学公式 $$y&#x3D;wx+b$$...</div></div></div><div class="recent-post-item"><div class="post_cover right"><a href="/2025/01/01/M-P%20model/" title="M-P模型"><img class="post-bg" src="/image/M-P_Model/wallhaven-dgp9eg.jpg" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="M-P模型"></a></div><div class="recent-post-info"><a class="article-title" href="/2025/01/01/M-P%20model/" title="M-P模型">M-P模型</a><div class="article-meta-wrap"><span class="post-meta-date"><i class="far fa-calendar-alt"></i><span class="article-meta-label">Created</span><time datetime="2024-12-31T16:00:00.000Z" title="Created 2025-01-01 00:00:00">2025-01-01</time></span></div><div class="content">M-P模型 McCulloch-Pitts(M-P)模型在1943年，由美国神经生理学家沃伦·麦卡洛克（Warren McCulloch）和数学家沃尔特·皮茨（Walter Pitts）对生物学神经进行建模，首次提出了一种形式于神经元模型，并命名为McCulloch-Pitts模型。其通过输出的正负（0作为阈值）用于识别两种不同类型的输入，但随着Sigmoid函数的提出，M-P模型通常采用Sigmoid函数作为激活函数，将模型输出映射到(0, 1)。将0.5作为阈值，输出大于等于0.5的归为一类，小于0.5的归为一类。  在M-P模型中，神经元接受n个神经元的输入信号x，将所有的输入信号x通过加权求和后与阈值θ进行比较，经激活函数处理后得到模型输出值。其数学表达式如下。      $$\overset{\hat{} }{y}  &#x3D; sigmoid( \sum_{i&#x3D;1} ^{n} x_{i}w_{i} )$$ </div></div></div><div class="recent-post-item"><div class="post_cover left"><a href="/2024/12/30/category%20copy/" title="数据预处理"><img class="post-bg" src="/image/Data%20preprocessing/wallhaven-yxdrex.png" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="数据预处理"></a></div><div class="recent-post-info"><a class="article-title" href="/2024/12/30/category%20copy/" title="数据预处理">数据预处理</a><div class="article-meta-wrap"><span class="post-meta-date"><i class="far fa-calendar-alt"></i><span class="article-meta-label">Created</span><time datetime="2024-12-29T16:00:00.000Z" title="Created 2024-12-30 00:00:00">2024-12-30</time></span></div><div class="content">...</div></div></div><div class="recent-post-item"><div class="post_cover right"><a href="/2024/12/30/regularization/" title="正则化"><img class="post-bg" src="/image/Regularization/luizclas.jpg" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="正则化"></a></div><div class="recent-post-info"><a class="article-title" href="/2024/12/30/regularization/" title="正则化">正则化</a><div class="article-meta-wrap"><span class="post-meta-date"><i class="far fa-calendar-alt"></i><span class="article-meta-label">Created</span><time datetime="2024-12-29T16:00:00.000Z" title="Created 2024-12-30 00:00:00">2024-12-30</time></span></div><div class="content">偏差与方差&emsp;&emsp;...</div></div></div><div class="recent-post-item"><div class="post_cover left"><a href="/2023/09/19/ab-vs-ivf/" title="Abaqus2020+VS2015+Fortran2016关联配置"><img class="post-bg" src="/image/ab_vs_f/2yojr9.jpg" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="Abaqus2020+VS2015+Fortran2016关联配置"></a></div><div class="recent-post-info"><a class="article-title" href="/2023/09/19/ab-vs-ivf/" title="Abaqus2020+VS2015+Fortran2016关联配置">Abaqus2020+VS2015+Fortran2016关联配置</a><div class="article-meta-wrap"><span class="post-meta-date"><i class="far fa-calendar-alt"></i><span class="article-meta-label">Created</span><time datetime="2023-09-18T16:00:00.000Z" title="Created 2023-09-19 00:00:00">2023-09-19</time></span></div><div class="content"> 安装教程 因为 Abaqus2020 及 VS2015 默认已经安装完成，这里不再介绍两软件安装教程，如果没有可去自行安装，这里主要介绍 Fortran2016 的安装教程（安装包获取在文章最下方）。      解压获取到的安装包，找到 setup.exe ,右键管理员身份运行，跳转安装界面后点击Next(如下图所示)     接着再Next，选择I accept…. 然后 Next(如下图)     接着选择 Choose al.. 点击Next,这时点击browse选择 Fortran安装包文件夹下的Crack目录下的 parallel_studio.lic po解补丁，Next。     No, …, Next, 到了选择安装路径步骤，点击Customize。     可以选择不勾选IA-32,Next，Next     Next, Browse选择安装路径，Next 接着这时有一步没截到图，点击install就行     等待安装完成，点击Finish       这时 Fortran 的安装就已经完成。     关联配置 桌面新建一个 vsfor.bat...</div></div></div><div class="recent-post-item"><div class="post_cover right"><a href="/2023/07/12/docker/" title="Docker简介及安装教程"><img class="post-bg" src="/image/Docker/Sea%20Of%20Dreams.png" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="Docker简介及安装教程"></a></div><div class="recent-post-info"><a class="article-title" href="/2023/07/12/docker/" title="Docker简介及安装教程">Docker简介及安装教程</a><div class="article-meta-wrap"><span class="post-meta-date"><i class="far fa-calendar-alt"></i><span class="article-meta-label">Created</span><time datetime="2023-07-11T16:00:00.000Z" title="Created 2023-07-12 00:00:00">2023-07-12</time></span></div><div class="content">Docker介绍  Docker 是一个开源的应用容器引擎，基于 Go 语言 并遵从Apache2.0 协议开源。Docker 可以让开发者打包他们的应用以及依赖包到一个轻量级、可移植的容器中，然后发布到任何流行的 Linux 机器上，也可以实现虚拟化。   Docker 从 17.03 版本之后分为 CE(Community Edition: 社区版)和 EE(Enterprise Edition: 企业版).    Docker优点 Docker是一个用于开发，交付和运行应用程序的开放平台。  Docker使您能够将应用程序与基础架构分开，从而可以快速交付软件。  借助 Docker，您可以与管理应用程序相同的方式来管理基础架构。  通过利用Docker的方法来快速交付,测试和部署代码，您可以大大减少编写代码和在生产环境中运行代码之间的延迟。   Docekr 官网： https://www.docker.com/  Github Docker 源码：https://github.com/docker/docker-ce     Docker的安装更新系统12sudo...</div></div></div><div class="recent-post-item"><div class="post_cover left"><a href="/2023/06/05/Transforms/" title="关于 Transforms.Compose 的小问题"><img class="post-bg" src="/image/Transforms/bk_image1.png" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="关于 Transforms.Compose 的小问题"></a></div><div class="recent-post-info"><a class="article-title" href="/2023/06/05/Transforms/" title="关于 Transforms.Compose 的小问题">关于 Transforms.Compose 的小问题</a><div class="article-meta-wrap"><span class="post-meta-date"><i class="far fa-calendar-alt"></i><span class="article-meta-label">Created</span><time datetime="2023-06-04T16:00:00.000Z" title="Created 2023-06-05 00:00:00">2023-06-05</time></span></div><div class="content">🎨关于 Transforms.Compose 的小问题 今天简单的玩了一下pytorch自带的CIFAR10数据集构建多分类预测模型，使用torchvision.transforms.Compose时，发现了一个小小的BUG。    我已经训练好了CIFAR10的预测模型，而我要对模型进行简单的验证。   导入相关模块和已经构建好的神经网络结构模型  123456import torchimport torchvisionfrom PIL import Imagefrom nn_model import Net  编写主程序代码  12345678910111213141516image_path = &#x27;./image/img.png&#x27;image = Image.open(image_path)transform = torchvision.transforms.Compose([torchvision.transforms.ToTensor(),                                           ...</div></div></div><div class="recent-post-item"><div class="post_cover right"><a href="/2023/05/22/Titanic/" title="Titanic - Machine Learning from Disaster"><img class="post-bg" src="/image/Titanic/mountains.jpg" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="Titanic - Machine Learning from Disaster"></a></div><div class="recent-post-info"><a class="article-title" href="/2023/05/22/Titanic/" title="Titanic - Machine Learning from Disaster">Titanic - Machine Learning from Disaster</a><div class="article-meta-wrap"><span class="post-meta-date"><i class="far fa-calendar-alt"></i><span class="article-meta-label">Created</span><time datetime="2023-05-21T16:00:00.000Z" title="Created 2023-05-22 00:00:00">2023-05-22</time></span></div><div class="content">泰坦尼克号灾难预测 使用 Deep Learning 创建一个预测模型，来预测哪些乘客在泰坦尼克号沉船中可以幸存下来。        背景 The sinking of the Titanic is one of the most infamous shipwrecks in history.On April 15, 1912, during her maiden voyage, the widely considered “unsinkable” RMS Titanic sank after colliding with an iceberg.   Unfortunately, there weren’t enough lifeboats for everyone onboard, resulting in the death of 1502 out of 2224 passengers and crew.While there was some element of luck involved in surviving, it seems some groups of...</div></div></div></div><nav id="pagination"><div class="pagination"><span class="page-number current">1</span></div></nav></div><div class="aside-content" id="aside-content"><div class="card-widget card-info text-center"><div class="avatar-img"><img src="/img/wallhaven-k7q1l1.png" onerror="this.onerror=null;this.src='/img/friend_404.gif'" alt="avatar"/></div><div class="author-info-name">小w</div><div class="author-info-description"></div><div class="site-data"><a href="/archives/"><div class="headline">Articles</div><div class="length-num">8</div></a><a href="/tags/"><div class="headline">Tags</div><div class="length-num">0</div></a><a href="/categories/"><div class="headline">Categories</div><div class="length-num">1</div></a></div><a id="card-info-btn" target="_blank" rel="noopener" href="https://github.com"><i class="fab fa-github"></i><span>Follow Me</span></a></div><div class="card-widget card-announcement"><div class="item-headline"><i class="fas fa-bullhorn fa-shake"></i><span>Announcement</span></div><div class="announcement_content">This is my Blog</div></div><div class="sticky_layout"><div class="card-widget card-recent-post"><div class="item-headline"><i class="fas fa-history"></i><span>Recent Posts</span></div><div class="aside-list"><div class="aside-list-item"><a class="thumbnail" href="/2025/04/29/bp-model/" title="神经网络基础知识点及手搓BP神经网络"><img src="/image/BP-model/wallhaven-mp5o1k.jpg" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="神经网络基础知识点及手搓BP神经网络"/></a><div class="content"><a class="title" href="/2025/04/29/bp-model/" title="神经网络基础知识点及手搓BP神经网络">神经网络基础知识点及手搓BP神经网络</a><time datetime="2025-04-28T16:00:00.000Z" title="Created 2025-04-29 00:00:00">2025-04-29</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/2025/01/01/M-P%20model/" title="M-P模型"><img src="/image/M-P_Model/wallhaven-dgp9eg.jpg" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="M-P模型"/></a><div class="content"><a class="title" href="/2025/01/01/M-P%20model/" title="M-P模型">M-P模型</a><time datetime="2024-12-31T16:00:00.000Z" title="Created 2025-01-01 00:00:00">2025-01-01</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/2024/12/30/category%20copy/" title="数据预处理"><img src="/image/Data%20preprocessing/wallhaven-yxdrex.png" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="数据预处理"/></a><div class="content"><a class="title" href="/2024/12/30/category%20copy/" title="数据预处理">数据预处理</a><time datetime="2024-12-29T16:00:00.000Z" title="Created 2024-12-30 00:00:00">2024-12-30</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/2024/12/30/regularization/" title="正则化"><img src="/image/Regularization/luizclas.jpg" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="正则化"/></a><div class="content"><a class="title" href="/2024/12/30/regularization/" title="正则化">正则化</a><time datetime="2024-12-29T16:00:00.000Z" title="Created 2024-12-30 00:00:00">2024-12-30</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/2023/09/19/ab-vs-ivf/" title="Abaqus2020+VS2015+Fortran2016关联配置"><img src="/image/ab_vs_f/2yojr9.jpg" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="Abaqus2020+VS2015+Fortran2016关联配置"/></a><div class="content"><a class="title" href="/2023/09/19/ab-vs-ivf/" title="Abaqus2020+VS2015+Fortran2016关联配置">Abaqus2020+VS2015+Fortran2016关联配置</a><time datetime="2023-09-18T16:00:00.000Z" title="Created 2023-09-19 00:00:00">2023-09-19</time></div></div></div></div></div></div></main><footer id="footer"><div class="footer-other"><div class="footer-copyright"></div></div></footer></div><div id="rightside"><div id="rightside-config-hide"><button id="darkmode" type="button" title="Toggle Between Light and Dark Mode"><i class="fas fa-adjust"></i></button><button id="hide-aside-btn" type="button" title="Toggle Between Single-column and Double-column"><i class="fas fa-arrows-alt-h"></i></button></div><div id="rightside-config-show"><button id="rightside-config" type="button" title="Settings"><i class="fas fa-cog fa-spin"></i></button><button id="go-up" type="button" title="Back to Top"><span class="scroll-percent"></span><i class="fas fa-arrow-up"></i></button></div></div><div><script src="/js/utils.js"></script><script src="/js/main.js"></script><div class="js-pjax"><script>window.typedJSFn = {
+  init: str => {
+    window.typed = new Typed('#subtitle', Object.assign({
+      strings: str,
+      startDelay: 300,
+      typeSpeed: 150,
+      loop: true,
+      backSpeed: 50,
+    }, null))
+  },
+  run: subtitleType => {
+    if (false) {
+      if (typeof Typed === 'function') {
+        subtitleType()
+      } else {
+        btf.getScript('https://cdn.jsdelivr.net/npm/typed.js/dist/typed.umd.min.js').then(subtitleType)
+      }
+    } else {
+      subtitleType()
+    }
+  },
+  processSubtitle: (content, extraContents = []) => {
+    if (false) {
+      const sub = ["爱我所爱之人"].slice()
+
+      if (extraContents.length > 0) {
+        sub.unshift(...extraContents)
+      }
+
+      if (typeof content === 'string') {
+        sub.unshift(content)
+      } else if (Array.isArray(content)) {
+        sub.unshift(...content)
+      }
+
+      sub.length > 0 && typedJSFn.init(sub)
+    } else {
+      document.getElementById('subtitle').textContent = typeof content === 'string' ? content :
+        (Array.isArray(content) && content.length > 0 ? content[0] : '')
+    }
+  }
+}
+btf.addGlobalFn('pjaxSendOnce', () => { typed.destroy() }, 'typedDestroy')
+</script><script>function subtitleType () {
+  typedJSFn.processSubtitle(["爱我所爱之人"])
+}
+typedJSFn.run(subtitleType)</script></div><script defer="defer" id="ribbon" src="https://cdn.jsdelivr.net/npm/butterfly-extsrc/dist/canvas-ribbon.min.js" size="150" alpha="0.6" zIndex="-1" mobile="false" data-click="false"></script><script async data-pjax src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script></div></body></html>
